@@ -9,13 +9,13 @@ BOT_TOKEN = os.environ["BOT_TOKEN"] ADMIN_ID = int(os.environ["ADMIN_ID"])
 
 SERVICE_LABELS = { "denizen": "🧩 Denizen Script плагин", "website": "🌐 Сайт", "design": "🎨 Дизайн", "other": "💡 Другое", }
 
-─── Utils ─────────────────────────────
+# ─── Utils ─────────────────────────────
 
 def esc(text: str) -> str: return escape_markdown(text or "—", version=2)
 
 async def ensure_text(update, state): if not update.message or not update.message.text: await update.message.reply_text("❌ Пожалуйста, отправь текст.") return state return None
 
-─── /start ───────────────────────────
+# ─── /start ───────────────────────────
 
 async def start(update: Update, ctx: ContextTypes.DEFAULT_TYPE): ctx.user_data.clear()
 
@@ -31,7 +31,7 @@ await update.message.reply_text(
 )
 return CHOOSE_TYPE
 
-─── Тип ──────────────────────────────
+# ─── Тип ──────────────────────────────
 
 async def choose_type(update: Update, ctx: ContextTypes.DEFAULT_TYPE): q = update.callback_query await q.answer()
 
@@ -43,7 +43,7 @@ await q.edit_message_text(
 )
 return ENTER_TITLE
 
-─── Название ─────────────────────────
+# ─── Название ─────────────────────────
 
 async def enter_title(update: Update, ctx: ContextTypes.DEFAULT_TYPE): if not update.message.text: return ENTER_TITLE
 
@@ -52,7 +52,7 @@ ctx.user_data["title"] = update.message.text
 await update.message.reply_text("📋 Напиши ТЗ:")
 return ENTER_TZ
 
-─── ТЗ ──────────────────────────────
+# ─── ТЗ ──────────────────────────────
 
 async def enter_tz(update: Update, ctx: ContextTypes.DEFAULT_TYPE): if not update.message.text: return ENTER_TZ
 
@@ -61,7 +61,7 @@ ctx.user_data["tz"] = update.message.text
 await update.message.reply_text("💰 Бюджет?")
 return ENTER_BUDGET
 
-─── Бюджет ──────────────────────────
+# ─── Бюджет ──────────────────────────
 
 async def enter_budget(update: Update, ctx: ContextTypes.DEFAULT_TYPE): if not update.message.text: return ENTER_BUDGET
 
@@ -70,7 +70,7 @@ ctx.user_data["budget"] = update.message.text
 await update.message.reply_text("📅 Дедлайн?")
 return ENTER_DEADLINE
 
-─── Дедлайн ─────────────────────────
+# ─── Дедлайн ─────────────────────────
 
 async def enter_deadline(update: Update, ctx: ContextTypes.DEFAULT_TYPE): if not update.message.text: return ENTER_DEADLINE
 
@@ -79,7 +79,7 @@ ctx.user_data["deadline"] = update.message.text
 await update.message.reply_text("📞 Контакт?")
 return ENTER_CONTACTS
 
-─── Контакты ────────────────────────
+# ─── Контакты ────────────────────────
 
 async def enter_contacts(update: Update, ctx: ContextTypes.DEFAULT_TYPE): if not update.message.text: return ENTER_CONTACTS
 
@@ -106,7 +106,7 @@ kb = InlineKeyboardMarkup([
 await update.message.reply_text(preview, parse_mode="MarkdownV2", reply_markup=kb)
 return CONFIRM
 
-─── Подтверждение ───────────────────
+# ─── Подтверждение ───────────────────
 
 async def confirm(update: Update, ctx: ContextTypes.DEFAULT_TYPE): q = update.callback_query await q.answer()
 
@@ -146,7 +146,7 @@ await ctx.bot.send_message(ADMIN_ID, admin_text, reply_markup=kb)
 ctx.user_data.clear()
 return ConversationHandler.END
 
-─── Ответ админа ────────────────────
+# ─── Ответ админа ────────────────────
 
 async def admin_reply_button(update: Update, ctx: ContextTypes.DEFAULT_TYPE): q = update.callback_query await q.answer()
 
@@ -172,7 +172,7 @@ except Exception as e:
 
 ctx.user_data.pop("reply_to", None)
 
-─── main ────────────────────────────
+# ─── main ────────────────────────────
 
 def main(): app = Application.builder().token(BOT_TOKEN).build()
 
