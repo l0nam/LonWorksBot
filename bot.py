@@ -200,7 +200,6 @@ if name == "main": main()    "denizen":  "🧩 Denizen Script плагин",
     "website":  "🌐 Сайт",
     "design":   "🎨 Дизайн",
     "other":    "💡 Другое",
-}
 
 # ─── /start ───────────────────────────────────────────────────────
 async def start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
