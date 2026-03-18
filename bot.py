@@ -1,5 +1,3 @@
-# ✅ Исправленная версия бота (без оплаты)
-
 import logging
 import os
 from telegram import (
@@ -61,7 +59,11 @@ async def start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ]
 
     await update.message.reply_text(
-        "👋 *Привет\!* Выбери тип работы 👇",
+        "👋 *Привет!* Я принимаю заказы на:\n\n"
+        "🧩 *Denizen Script* — плагины для Minecraft\n"
+        "🌐 *Сайты* — лендинги, веб‑приложения\n"
+        "🎨 *Дизайн* — UI/UX, графика, брендинг\n\n"
+        "Выбери тип работы 👇",
         parse_mode="MarkdownV2",
         reply_markup=InlineKeyboardMarkup(kb),
     )
@@ -75,7 +77,7 @@ async def choose_type(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data["service_type"] = q.data
 
     await q.edit_message_text(
-        f"Выбрано: *{esc(SERVICE_LABELS[q.data])}*\n\nВведите название проекта:",
+        f"Отлично, выбрано: *{esc(SERVICE_LABELS[q.data])}*\n\n✏️ Напиши короткое *название проекта* (одностраничка для a-проект, скрипт на b-проект):",
         parse_mode="MarkdownV2",
     )
     return ENTER_TITLE
@@ -87,7 +89,12 @@ async def enter_title(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     ctx.user_data["title"] = update.message.text
 
-    await update.message.reply_text("📋 Напиши ТЗ:")
+    await update.message.reply_text("📋 Напиши подробное *техническое задание*.\n\n"
+        "Включи:\n"
+        "• Функционал / страницы / экраны\n"
+        "• Референсы (ссылки, примеры)\n"
+        "• Технические требования\n"
+        "• Любые важные детали")
     return ENTER_TZ
 
 # ─── ТЗ ──────────────────────────────
@@ -97,7 +104,7 @@ async def enter_tz(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     ctx.user_data["tz"] = update.message.text
 
-    await update.message.reply_text("💰 Бюджет?")
+    await update.message.reply_text("💰 Укажи *бюджет* (или напиши «не знаю»):")
     return ENTER_BUDGET
 
 # ─── Бюджет ──────────────────────────
@@ -107,7 +114,7 @@ async def enter_budget(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     ctx.user_data["budget"] = update.message.text
 
-    await update.message.reply_text("📅 Дедлайн?")
+    await update.message.reply_text("📅 Укажи *дедлайн* — когда нужно готово? (или «не горит»):")
     return ENTER_DEADLINE
 
 # ─── Дедлайн ─────────────────────────
@@ -117,7 +124,8 @@ async def enter_deadline(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     ctx.user_data["deadline"] = update.message.text
 
-    await update.message.reply_text("📞 Контакт?")
+    await update.message.reply_text("📞 Укажи *контакт* для связи:\n"
+        "Telegram (@username), email или другой мессенджер:",)
     return ENTER_CONTACTS
 
 # ─── Контакты ────────────────────────
@@ -130,12 +138,12 @@ async def enter_contacts(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     preview = (
         f"*Проверь заказ:*\n\n"
-        f"Тип: {esc(SERVICE_LABELS[d['service_type']])}\n"
-        f"Название: {esc(d['title'])}\n"
-        f"Бюджет: {esc(d['budget'])}\n"
-        f"Дедлайн: {esc(d['deadline'])}\n"
-        f"Контакт: {esc(d['contacts'])}\n\n"
-        f"ТЗ:\n{esc(d['tz'])}"
+        f"🔹Тип: {esc(SERVICE_LABELS[d['service_type']])}\n"
+        f"🔹Название: {esc(d['title'])}\n"
+        f"🔹Бюджет: {esc(d['budget'])}\n"
+        f"🔹Дедлайн: {esc(d['deadline'])}\n"
+        f"🔹Контакт: {esc(d['contacts'])}\n\n"
+        f"🔹ТЗ:\n{esc(d['tz'])}"
     )
 
     kb = InlineKeyboardMarkup([
@@ -167,14 +175,14 @@ async def confirm(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     admin_text = (
         f"НОВЫЙ ЗАКАЗ {now}\n\n"
-        f"ID: {user.id}\n"
-        f"User: {user.full_name}\n\n"
-        f"Тип: {SERVICE_LABELS[d['service_type']]}\n"
-        f"Название: {d['title']}\n"
-        f"Бюджет: {d['budget']}\n"
-        f"Дедлайн: {d['deadline']}\n"
-        f"Контакт: {d['contacts']}\n\n"
-        f"ТЗ:\n{d['tz']}"
+        f"🔹ID: {user.id}\n"
+        f"🔹User: {user.full_name}\n\n"
+        f"🔹Тип: {SERVICE_LABELS[d['service_type']]}\n"
+        f"🔹Название: {d['title']}\n"
+        f"🔹Бюджет: {d['budget']}\n"
+        f"🔹Дедлайн: {d['deadline']}\n"
+        f"🔹Контакт: {d['contacts']}\n\n"
+        f"🔹ТЗ:\n{d['tz']}"
     )
 
     if len(admin_text) > 4096:
