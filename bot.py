@@ -1,4 +1,3 @@
-✅ Исправленная версия бота (без оплаты)
 
 import logging import os from telegram import ( Update, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove ) from telegram.ext import ( Application, CommandHandler, MessageHandler, CallbackQueryHandler, ConversationHandler, filters, ContextTypes ) from telegram.helpers import escape_markdown from datetime import datetime
 
