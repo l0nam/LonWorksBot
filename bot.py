@@ -65,7 +65,7 @@ async def choose_type(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data["service_type"] = query.data
     await query.edit_message_text(
         f"Отлично, выбрано: *{SERVICE_LABELS[query.data]}*\n\n"
-        "✏️ Напиши короткое *название* проекта (1–2 предложения):",
+        "✏️ Напиши *суть* проекта в двух словах (одностаничка для магазина, скрипт на мяч):",
         parse_mode="Markdown",
     )
     return ENTER_TITLE
@@ -77,7 +77,7 @@ async def enter_title(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "📋 Теперь напиши подробное *техническое задание*.\n\n"
         "_Чем детальнее — тем точнее будет оценка._\n\n"
-        "Включи:\n"
+        "Желательно включить:\n"
         "• Функционал / страницы / экраны\n"
         "• Референсы (ссылки, примеры)\n"
         "• Технические требования\n"
