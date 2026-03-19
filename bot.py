@@ -59,12 +59,12 @@ async def start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ]
 
     await update.message.reply_text(
-        "👋 <b>Привет!</b> Я принимаю заказы на:\n\n"
-        "🧩 <b>Denizen Script</b> — плагины для Minecraft\n"
-        "🌐 <b>Сайты</b> — лендинги, веб-приложения\n"
-        "🎨 <b>Дизайн</b> — UI/UX, графика, брендинг\n\n"
+        "👋 *Привет!* Я принимаю заказы на:\n\n"
+        "🧩 *Denizen Script* — плагины для Minecraft\n"
+        "🌐 *Сайты* — лендинги, веб-приложения\n"
+        "🎨 *Дизайн* — UI/UX, графика, брендинг\n\n"
         "Выбери тип работы 👇",
-        parse_mode="HTML",
+        parse_mode="Markdown",
         reply_markup=InlineKeyboardMarkup(kb),
     )
     return CHOOSE_TYPE
@@ -78,9 +78,9 @@ async def choose_type(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data["service_type"] = service
 
     await q.edit_message_text(
-        f"Отлично, выбрано: <b>{safe_get(SERVICE_LABELS, service)}</b>\n\n"
-        "✏️ Напиши короткое <b>название проекта</b> (одностраничка для a-проект, скрипт на b-проект):",
-        parse_mode="HTML",
+        f"Отлично, выбрано: *{safe_get(SERVICE_LABELS, service)}*\n\n"
+        "✏️ Напиши короткое *название проекта* (одностраничка для a-проект, скрипт на b-проект):",
+        parse_mode="Markdown",
     )
     return ENTER_TITLE
 
@@ -92,13 +92,13 @@ async def enter_title(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data["title"] = update.message.text.strip()
 
     await update.message.reply_text(
-        "📋 Напиши подробное <b>техническое задание</b>.\n\n"
+        "📋 Напиши подробное *техническое задание*.\n\n"
         "Включи:\n"
         "• Функционал / страницы / экраны\n"
         "• Референсы (ссылки, примеры)\n"
         "• Технические требования\n"
         "• Любые важные детали",
-        parse_mode="HTML",
+        parse_mode="Markdown",
     )
     return ENTER_TZ
 
@@ -110,8 +110,8 @@ async def enter_tz(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data["tz"] = update.message.text.strip()
 
     await update.message.reply_text(
-        "💰 Укажи <b>бюджет</b> (или напиши «не знаю»):",
-        parse_mode="HTML",
+        "💰 Укажи *бюджет* (или напиши «не знаю»):",
+        parse_mode="Markdown",
     )
     return ENTER_BUDGET
 
@@ -123,8 +123,8 @@ async def enter_budget(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data["budget"] = update.message.text.strip()
 
     await update.message.reply_text(
-        "📅 Укажи <b>дедлайн</b> — когда нужно готово? (или «не горит»):",
-        parse_mode="HTML",
+        "📅 Укажи *дедлайн* — когда нужно готово? (или «не горит»):",
+        parse_mode="Markdown",
     )
     return ENTER_DEADLINE
 
@@ -136,9 +136,9 @@ async def enter_deadline(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data["deadline"] = update.message.text.strip()
 
     await update.message.reply_text(
-        "📞 Укажи <b>контакт</b> для связи:\n"
+        "📞 Укажи *контакт* для связи:\n"
         "Telegram (@username), email или другой мессенджер:",
-        parse_mode="HTML",
+        parse_mode="Markdown",
     )
     return ENTER_CONTACTS
 
@@ -151,13 +151,13 @@ async def enter_contacts(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     d = ctx.user_data
 
     preview = (
-        "<b>Проверь заказ:</b>\n\n"
+        "*Проверь заказ:*\n\n"
         f"🔹Тип: {safe_get(SERVICE_LABELS, d.get('service_type'))}\n"
         f"🔹Название: {d.get('title')}\n"
         f"🔹Бюджет: {d.get('budget')}\n"
         f"🔹Дедлайн: {d.get('deadline')}\n"
         f"🔹Контакт: {d.get('contacts')}\n\n"
-        f"🔹ТЗ:\n{d.get('tz')}"
+        f"🔹ТЗ:\n```{d.get('tz')}```"
     )
 
     kb = InlineKeyboardMarkup([
@@ -167,7 +167,7 @@ async def enter_contacts(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         ]
     ])
 
-    await update.message.reply_text(preview, parse_mode="HTML", reply_markup=kb)
+    await update.message.reply_text(preview, parse_mode="Markdown", reply_markup=kb)
     return CONFIRM
 
 # ─── CONFIRM ─────────────────────────
@@ -195,7 +195,7 @@ async def confirm(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         f"🔹 Бюджет: {d.get('budget')}\n"
         f"🔹 Дедлайн: {d.get('deadline')}\n"
         f"🔹 Контакт: {d.get('contacts')}\n\n"
-        f"📋 ТЗ:\n{tz[:3500] if len(tz) > 3500 else tz}"
+        f"📋 ТЗ:\n```{tz[:3500] if len(tz) > 3500 else tz}```"
     )
 
     kb = InlineKeyboardMarkup([
