@@ -209,6 +209,7 @@ async def confirm(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await ctx.bot.send_message(
             chat_id=ADMIN_ID,
             text=admin_text,
+            parse_mode="Markdown",
             reply_markup=kb,
         )
         logger.info(f"Заказ от {user.id} отправлен админу {ADMIN_ID}")
