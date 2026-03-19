@@ -181,31 +181,39 @@ async def confirm(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     d = ctx.user_data
     user = update.effective_user
-
     now = datetime.now().strftime("%d.%m.%Y %H:%M")
 
-    await q.edit_message_text("✅ Заказ отправлен!")
+    await q.edit_message_text("✅ Заказ отправлен! Скоро с тобой свяжутся 🕐")
 
+    tz = d.get('tz', '')
     admin_text = (
-        f"НОВЫЙ ЗАКАЗ {now}\n\n"
-        f"🔹ID: {user.id}\n"
-        f"🔹User: {user.full_name}\n\n"
-        f"🔹Тип: {safe_get(SERVICE_LABELS, d.get('service_type'))}\n"
-        f"🔹Название: {d.get('title')}\n"
-        f"🔹Бюджет: {d.get('budget')}\n"
-        f"🔹Дедлайн: {d.get('deadline')}\n"
-        f"🔹Контакт: {d.get('contacts')}\n\n"
-        f"🔹ТЗ:\n```{d.get('tz')}```"
+        f"🔔 НОВЫЙ ЗАКАЗ [{now}]\n\n"
+        f"👤 {user.full_name} (ID: {user.id})\n"
+        f"📱 @{user.username or '—'}\n\n"
+        f"🔹 Тип: {safe_get(SERVICE_LABELS, d.get('service_type'))}\n"
+        f"🔹 Название: {d.get('title')}\n"
+        f"🔹 Бюджет: {d.get('budget')}\n"
+        f"🔹 Дедлайн: {d.get('deadline')}\n"
+        f"🔹 Контакт: {d.get('contacts')}\n\n"
+        f"📋 ТЗ:\n{tz[:3500] if len(tz) > 3500 else tz}"
     )
 
-    if len(admin_text) > 4000:
-        admin_text = admin_text[:4000] + "\n...[обрезано]"
-
     kb = InlineKeyboardMarkup([
-        [InlineKeyboardButton("Ответить", callback_data=f"reply_{user.id}")]
+        [
+            InlineKeyboardButton("💬 Ответить", callback_data=f"reply_{user.id}"),
+            InlineKeyboardButton("👤 Написать напрямую", url=f"tg://user?id={user.id}"),
+        ]
     ])
 
-    await ctx.bot.send_message(ADMIN_ID, admin_text, parse_mode="Markdown", reply_markup=kb_admin)
+    try:
+        await ctx.bot.send_message(
+            chat_id=ADMIN_ID,
+            text=admin_text,
+            reply_markup=kb,
+        )
+        logger.info(f"Заказ от {user.id} отправлен админу {ADMIN_ID}")
+    except Exception as e:
+        logger.error(f"Ошибка отправки админу: {e}")
 
     ctx.user_data.clear()
     return ConversationHandler.END
