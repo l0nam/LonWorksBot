@@ -195,7 +195,7 @@ async def confirm(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         f"🔹Бюджет: {d.get('budget')}\n"
         f"🔹Дедлайн: {d.get('deadline')}\n"
         f"🔹Контакт: {d.get('contacts')}\n\n"
-        f"🔹ТЗ:\n{d.get('tz')}"
+        f"🔹ТЗ:\n```{d.get('tz')}```"
     )
 
     if len(admin_text) > 4000:
@@ -205,7 +205,7 @@ async def confirm(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("Ответить", callback_data=f"reply_{user.id}")]
     ])
 
-    await ctx.bot.send_message(ADMIN_ID, admin_text, reply_markup=kb)
+    await ctx.bot.send_message(ADMIN_ID, md_escape(admin_text), reply_markup=kb)
 
     ctx.user_data.clear()
     return ConversationHandler.END
