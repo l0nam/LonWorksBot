@@ -205,7 +205,7 @@ async def confirm(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("Ответить", callback_data=f"reply_{user.id}")]
     ])
 
-    await ctx.bot.send_message(ADMIN_ID, md_escape(admin_text), reply_markup=kb)
+    await ctx.bot.send_message(ADMIN_ID, admin_text, parse_mode="Markdown", reply_markup=kb_admin)
 
     ctx.user_data.clear()
     return ConversationHandler.END
