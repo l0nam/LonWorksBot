@@ -247,7 +247,7 @@ async def admin_send(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         return
 
     try:
-        await ctx.bot.send_message(target, f"Ответ:\n{update.message.text}")
+        await ctx.bot.send_message(target, {update.message.text})
         await update.message.reply_text("Отправлено")
     except Exception as e:
         logger.error(e)
